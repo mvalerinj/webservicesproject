@@ -81,30 +81,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Global.asax" />
-    <Content Include="ReleaseNotes.css" />
-    <Content Include="Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Content Include="packages.config" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <Content Include="src\css\application.css" />
+    <Content Include="src\css\toolkit.css" />
+    <Content Include="src\img\avatar-dhg.png" />
+    <Content Include="src\img\brand-white.png" />
+    <Content Include="src\img\brand.png" />
+    <Content Include="src\img\iceland.jpg" />
+    <Content Include="src\img\unsplash_1.jpg" />
+    <Content Include="src\index.html" />
+    <Content Include="src\js\application.js" />
+    <Content Include="src\js\chart.js" />
+    <Content Include="src\js\jquery.min.js" />
+    <Content Include="src\js\toolkit.js" />
+    <Content Include="src\login.html" />
+    <Content Include="web.config" />
+    <Content Include="src\fonts\toolkit-entypo.eot" />
+    <Content Include="src\fonts\toolkit-entypo.ttf" />
+    <Content Include="src\fonts\toolkit-entypo.woff" />
+    <Content Include="src\fonts\toolkit-entypo.woff2" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
     </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
