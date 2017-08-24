@@ -16,6 +16,7 @@
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600" rel="stylesheet" type="text/css">
     <link href="css/toolkit.css" rel="stylesheet">
 
+
     <link href="css/application.css" rel="stylesheet">
 
     <style>
@@ -30,6 +31,50 @@
 
 </head>
 
+<script>
+    function myFunction() {
+
+        try {
+            var user = document.getElementById("username").value;
+            var pass = document.getElementById("password").value;
+            if (user == ""||pass==""){
+                alert("Campos Nulos");
+            }else{
+                alert(user);
+                event.preventDefault();
+                $.ajax({
+                    crossOrigin: true,
+                    url : 'http://admin:ulacit@13.90.93.32:5984/users/'+user,
+                    type : 'GET',
+                    dataType: 'json',
+                    contentType: 'application/json',
+
+
+                    success:function(result){
+
+                        if(result.pass!="error"){
+                            if(result.pass==pass){
+                                open("index.html","_parent" );
+                            }else{
+                                alert("Usuario o Password incorrecto");
+                                limpiarFormulario();
+                            }
+                        }else{
+                            alert("Usuario o Password incorrecto");
+                            limpiarFormulario();
+                        }
+                    },
+                    error: function(){
+                        alert("Algo Paso, revisar Web Connectivity");
+                    }
+                });
+            }
+        }
+        catch(err) {
+            alert(err.message);
+        }
+    }
+</script>
 
 <body>
 
@@ -44,17 +89,17 @@
                     <img src="img/brand.png" alt="brand">
                 </a>
 
-                <div class="form-group">
-                    <input class="form-control" placeholder="Username">
+                <div class="form-group" >
+                    <input class="form-control" id="username" placeholder="Username">
                 </div>
 
                 <div class="form-group m-b-md">
-                    <input type="password" class="form-control" placeholder="Password">
+                    <input type="password" id="password" class="form-control" placeholder="Password">
                 </div>
 
                 <div class="m-b-lg">
 
-                    <button class="btn btn-primary"><a href="index.html" style="color: white">Log In</a></button>
+                    <button class="btn btn-primary"  onclick="myFunction()">Log In</a></button>
                     
                     <button class="btn btn-default"><a href="signup.html" style="color: black">Sign up</a></button>
                 </div>
