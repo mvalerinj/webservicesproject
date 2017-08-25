@@ -1,0 +1,406 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+
+    <title>
+
+        Home
+
+    </title>
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600" rel="stylesheet" type="text/css">
+    <link href="css/toolkit.css" rel="stylesheet" />
+
+    <link href="css/application.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <style>
+        /* note: this is a hack for ios iframe for bootstrap themes shopify page */
+        /* this chunk of css is not part of the toolkit :) */
+        body {
+            width: 1px;
+            min-width: 100%;
+            *width: 100%;
+        }
+    </style>
+
+
+    <script>
+
+        window.onload = function () {
+            var tabla = document.getElementById("tabla");
+            tabla.oldHTML = tabla.innerHTML;
+
+
+        }
+
+        function limpiarFurmularios() {
+            document.getElementById("name").value = '';
+            document.getElementById("apellido").value = '';
+            document.getElementById("cantidadVisitas").value = '';
+            document.getElementById("direccion").value = '';
+            document.getElementById("doctor").value = '';
+            document.getElementById("buscar").value='';
+
+        }
+
+        function agregarExpediente() {
+            try {
+                var name = document.getElementById("name").value;
+                var apellido = document.getElementById("apellido").value;
+                var cantidadVisitas = document.getElementById("cantidadVisitas").value;
+                var direccion = document.getElementById("direccion").value;
+                var doctor = document.getElementById("doctor").value;
+
+
+                if (name == ""||apellido==""||cantidadVisitas==""||direccion==""||doctor==""){
+                    alert("Campos Nulos");
+                }else{
+
+                    event.preventDefault();
+                    $.ajax({
+                        crossOrigin: true,
+                        url : 'http://admin:ulacit@13.90.93.32:5984/expedientes/'+name,
+                        type : 'PUT',
+                        processData: false,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({apellido:apellido,cantidadvisitas:cantidadVisitas,direccion:direccion,doctor:doctor}),
+                        success:function(){
+                            alert("Agregado correctamente");
+                            verTodos();
+                            limpiarFurmularios();
+                        },
+                        error: function(){
+                            alert("Usuario Ya Utilizado");
+                            limpiarFurmularios();
+
+                        }
+                    });
+
+                }
+            }
+            catch(err) {
+                alert(err.message);
+            }}
+
+
+        function verTodos() {
+
+
+            document.getElementById("expediente").innerHTML="";
+            document.getElementById("busqueda").innerHTML='';
+            event.preventDefault();
+
+            $.ajax({
+                crossOrigin: true,
+                url : 'http://13.90.93.32:5984/expedientes/_all_docs?include_docs=true',
+                type : 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                success:function(result) {
+
+
+
+
+                    removeTable();
+                    result.rows.forEach(function(data){
+
+
+
+
+                            document.getElementById("tabla").innerHTML+=
+
+                                '<tr>'+
+                                '<th>'+
+                                data.doc._id
+                                +'</th>'+
+                                '<th>'+
+                                data.doc.apellido
+                                +'</th>'+
+                                '<th>'+
+                                data.doc.cantidadvisitas
+                                +'</th>'+
+                                '<th>'+
+                                data.doc.direccion
+                                +'</th>'+
+                                '<th>' +
+                                data.doc.doctor
+                                +'</th>'
+                        '<tr>';
+                        // data.doc._id+'  '+data.doc.apellido+'  ' +data.doc.cantidadvisitas+'  '+data.doc.direccion+'  '+data.doc.doctor+' <br> ';
+
+
+
+
+
+
+                    });
+                },
+                error: function(){
+                    alert("Usuario Ya Utilizado");
+                    limpiarFurmularios();
+
+                }
+            });
+
+        }
+
+
+        function removeTable() {
+
+            tabla.innerHTML=tabla.oldHTML;
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+    </script>
+
+    <script>
+
+        function buscarPorID() {
+            try {
+                var id = document.getElementById("buscar").value;
+
+
+                if (id == ""){
+                    alert("Campos Nulos");
+
+                }else{
+
+                    document.getElementById("busqueda").innerHTML='';
+                    document.getElementById("expediente").innerHTML="";
+                    removeTable();
+
+                    $.ajax({
+
+                        crossOrigin: true,
+                        url : 'http://admin:ulacit@13.90.93.32:5984/expedientes/'+id,
+                        type : 'GET',
+                        dataType: 'json',
+                        contentType: 'application/json',
+
+                        success:function(result){
+
+                            document.getElementById("tabla").innerHTML=
+
+                            '<th>'+
+                            '<th>'+
+                            result._id
+                            +'</th>'+
+                            '<th>'+
+                            result.apellido
+                            +'</th>'+
+                            '<th>'+
+                            result.cantidadvisitas
+                            +'</th>'+
+                                '<th>'+
+                            result.direccion
+                            +'</th>'+
+                                '<th>' +
+                            result.doctor
+                            +'</th>'
+                            '<tr>';
+
+
+                            limpiarFurmularios();
+
+                        },
+                        error: function(){
+                            alert("Usuario No Encontrado");
+                            limpiarFurmularios();
+
+
+                        }
+                    });
+
+                }
+            }
+            catch(err) {
+                alert(err.message);
+            }
+
+
+        }
+
+    </script>
+</head>
+
+<body class="with-top-navbar">
+
+<nav class="navbar navbar-inverse navbar-fixed-top app-navbar">
+    <nav class="navbar navbar-inverse navbar-fixed-top app-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-main">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-collapse-main">
+
+                <ul class="nav navbar-nav hidden-xs">
+                    <li class="active">
+                        <a href="index.html">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="Expediente.html">Expediente</a>
+                    </li>
+                    <li>
+                        <a href="Tratamiento.html">Tratamiento</a>
+                    </li>
+                    <li>
+                        <a href="medicamentos.html">Medicamentos</a>
+                    </li>
+                    <li>
+                        <a href="doctor.html">Doctor</a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav hidden-sm hidden-md hidden-lg">
+                    <li><a href="Expediente.html">Registro</a></li>
+                    <li><a href="login.html">Logout</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav hidden">
+                    <li><a href="login.html">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</nav>
+
+<div class="container p-t-md">
+
+    <div class="col-md-6">
+        <ul class="list-group media-list media-list-stream">
+
+            <li class="media list-group-item p-a">
+                <div class="media-body">
+
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <form>
+
+                        <h1 onclick="verTodos()" >Expediente</h1>
+
+                        <h1>Agregar</h1>
+                        <input type=" text" id="name" name="name" placeholder="Agregar nombre">
+                        <input type=" text" id="apellido" name="apellido" placeholder="Agregar apellido">
+                        <input type=" text" id="cantidadVisitas" name="cantidaddevisitas" placeholder="Agregar cantidad de visitas">
+                        <input type=" text" id="direccion" name="direccion" placeholder="Agregar direccion">
+                        <input type=" text" id="doctor" name="doctor" placeholder="Agregar doctor">
+                        <input type="submit" onclick="agregarExpediente()" value="Submit">
+
+
+
+
+
+
+
+                        </form>
+
+
+
+                        <h1 id ="test"> Buscar</h1>
+                        <input type=" text" id="buscar"  placeholder="Buscar expediente">
+                        <button onclick="buscarPorID()"> Buscar</button>
+
+                    </div>
+
+
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-md-6">
+        <ul class="list-group media-list media-list-stream">
+
+            <li class="media list-group-item p-a">
+                <div class="media-body">
+
+                    <div class="col-md-6 col-sm-6 col-xs-6">
+                        <div id="todos">
+
+                            Expedientes:
+
+                            <table id = "tabla" style="width: 100%">
+                                <tr>
+                                    <th>
+                                        Nombre
+                                    </th>
+                                    <th>
+                                        Apellido
+                                    </th>
+                                    <th>
+                                        #Visitas
+                                    </th>
+                                    <th>
+                                        Direccion
+                                    </th>
+                                    <th>
+                                        Doctor
+                                    </th>
+                                </tr>
+
+
+                            </table>
+                            <p id="expediente"></p>
+
+                        </div>
+
+                        <div id="pantalla">
+
+                            <p id="busqueda"></p>
+
+                        </div>
+
+
+
+
+
+                </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+</div>
+
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/toolkit.js"></script>
+<script src="js/application.js"></script>
+<script>
+    // execute/clear BS loaders for docs
+    $(function(){
+        if (window.BS&&window.BS.loader&&window.BS.loader.length) {
+            while(BS.loader.length){(BS.loader.pop())()}
+        }
+    })
+</script>
+
+</body>
+</html>
